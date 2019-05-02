@@ -7,7 +7,7 @@ function add_cheats() {
   let nbsp = document.createElement('div');
   nbsp.innerHTML = '&nbsp;|&nbsp;';
   let link = document.createElement('div');
-  link.innerHTML = '<a href="#" onclick="autokittens_cheats_clicked()"> Cheats</a>';
+  link.innerHTML = '<a href="#" onclick="ak_cheats_clicked()"> Cheats</a>';
   let elem = document.getElementsByClassName('right-tab-header')[0];
   elem.appendChild(nbsp.firstChild);
   elem.appendChild(link.firstChild);
