@@ -6,12 +6,17 @@
   "browser_action": {
     "default_icon": "images/cat128.png"
   },
-  "background": {
-    "scripts": [
-      "background.js"
-    ],
-    "persistent": false
-  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://bloodrizer.ru/games/kittens/"
+      ],
+      "js": [
+        "kittens.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
   "icons": {
     "16": "images/cat16.png",
     "48": "images/cat48.png",
@@ -20,5 +25,8 @@
   "permissions": [
     "*://bloodrizer.ru/games/kittens/"
   ],
-  "short_name": "Auto.Kittens"
+  "short_name": "Auto.Kittens",
+  "web_accessible_resources": [
+    "/kittenextras.js"
+  ]
 }
