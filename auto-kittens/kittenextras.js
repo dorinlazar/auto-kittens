@@ -82,4 +82,4 @@ function autokittens_cheats_clicked() {
   $('#chatLink').toggleClass('active', false);
 }
 
-setInterval(autokittens_timer_function, 500);
+setInterval(autokittens_timer_function, 2500);
