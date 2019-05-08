@@ -11,9 +11,7 @@ function ak_timer_function() {
   if ($('#automateKittens').prop('checked')) {
     ak_observeTheSky();
     ak_autoPray();
-    if ($('#automateCraft').prop('checked')) {
-      ak_autoCraft();
-    }
+    ak_autoCraft();
     if ($('#automateHunt').prop('checked')) {
       ak_autoHunt();
     }
@@ -24,42 +22,51 @@ function ak_resource_at_limit(res) {
   return res.maxValue - res.value < (res.maxValue / 100);
 }
 
+function ak_named_resource_at_limit(res) {
+  let r = gamePage.resPool.get(res);
+  return ak_resource_at_limit(r);
+}
+
 function ak_observeTheSky() {
   $('#observeBtn').click();
 }
 
-function ak_craft(res, from, count) {
-  if (gamePage.workshop.getCraft(res).unlocked) {
-    let maxops = 100;
-    while (maxops > 0) {
-      maxops--;
-      let r = gamePage.resPool.get(from);
-      if (ak_resource_at_limit(r)) {
-        gamePage.craft(res, count);
-      } else {
-        break;
-      }
+function ak_craft(res, from) {
+  let ws = gamePage.workshop;
+  if (ws.getCraft(res).unlocked && ws.getCraftAllCount(res) > 0) {
+    while (ak_named_resource_at_limit(from)) {
+      gamePage.craft(res, 1);
     }
   }
 }
 
 function ak_autoCraft() {
-  ak_craft('beam', 'wood', 1);
-  ak_craft('wood', 'catnip', 1);
-  ak_craft('slab', 'minerals', 1);
-  ak_craft('steel', 'coal', 1);
-  ak_craft('plate', 'iron', 1);
+  if ($('#automateCraft').prop('checked')) {
+    ak_craft('beam', 'wood');
+    ak_craft('wood', 'catnip');
+    ak_craft('slab', 'minerals');
+    ak_craft('steel', 'coal');
+    ak_craft('plate', 'iron');
+  }
+  let ws = gamePage.workshop;
+  if (ws.getCraftAllCount('parchment') > 0 && ws.getCraft('parchment').unlocked && $('#automateParchment').prop('checked')) {
+    gamePage.craftAll('parchment');
+  }
+  if ($('#automateManuscript').prop('checked')) {
+    ak_craft('manuscript', 'culture');
+  }
+  if ($('#automateCompendium').prop('checked')) {
+    ak_craft('compedium', 'science');
+  }
+  if ($('#automateBlueprint').prop('checked')) {
+    ak_craft('blueprint', 'science');
+  }
 }
 
 function ak_autoHunt() {
   var catpower = gamePage.resPool.get('manpower');
   if (ak_resource_at_limit(catpower)) {
     $('a:contains(\'Send hunters\')')[0].click();
-    let ws = gamePage.workshop;
-    if (ws.getCraft('parchment').unlocked && $('#automateParchment').prop('checked')) { gamePage.craftAll('parchment'); }
-    if (ws.getCraft('manuscript').unlocked && $('#automateManuscript').prop('checked')) { gamePage.craftAll('manuscript'); }
-    if (ws.getCraft('compedium').unlocked && $('#automateCompendium').prop('checked')) { gamePage.craftAll('compedium'); }
-    if (ws.getCraft('blueprint').unlocked && $('#automateBlueprint').prop('checked')) { gamePage.craftAll('blueprint'); }
   }
 };
 
