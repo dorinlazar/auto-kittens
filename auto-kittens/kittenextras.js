@@ -12,9 +12,7 @@ function ak_timer_function() {
     ak_observeTheSky();
     ak_autoPray();
     ak_autoCraft();
-    if ($('#automateHunt').prop('checked')) {
-      ak_autoHunt();
-    }
+    ak_autoHunt();
   }
 }
 
@@ -28,7 +26,9 @@ function ak_named_resource_at_limit(res) {
 }
 
 function ak_observeTheSky() {
-  $('#observeBtn').click();
+  if ($('#automateObserve').prop('checked')) {
+    $('#observeBtn').click();
+  }
 }
 
 function ak_craft(res, from) {
@@ -64,17 +64,19 @@ function ak_autoCraft() {
 }
 
 function ak_autoHunt() {
-  var catpower = gamePage.resPool.get('manpower');
-  if (ak_resource_at_limit(catpower)) {
-    $('a:contains(\'Send hunters\')')[0].click();
+  if ($('#automateHunt').prop('checked')) {
+    if (ak_named_resource_at_limit('manpower')) {
+      //gamePage.village.sendHunters(); // this doesn't properly decrease catpower.
+      gamePage.village.huntMultiple(1);
+    }
   }
 };
 
 function ak_autoPray() {
-  var faith = gamePage.resPool.get('faith');
-
-  if (ak_resource_at_limit(faith)) {
-    $('a:contains(\'Praise the sun\')')[0].click();
+  if ($('#automatePraise').prop('checked')) {
+    if (ak_named_resource_at_limit('faith')) {
+      gamePage.religion.praise();
+    }
   }
 }
 
