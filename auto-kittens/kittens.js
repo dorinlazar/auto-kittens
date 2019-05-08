@@ -1,5 +1,5 @@
 
-function add_cheats() {
+function add_cheats(settings) {
   if (document.getElementById('rightTabAutoKittens')) {
     return;
   }
@@ -31,8 +31,44 @@ function add_cheats() {
     '<input type="checkbox" name="automateManuscript" id="automateManuscript" checked/><label for="automateManuscript">Auto make manuscripts (on max culture)</label><br>' +
     '<input type="checkbox" name="automateCompendium" id="automateCompendium"/><label for="automateCompendium">Auto make compendiums (on max science)</label><br>' +
     '<input type="checkbox" name="automateBlueprint" id="automateBlueprint"/><label for="automateBlueprint">Auto make blueprints (on max science)</label><br>' +
-    '</div>';
+    '<input type="number" name="autoThreshold" id="autoThreshold" min="0" max="99" value="99"/><label for="autoThreshold">Threshold</label><br>'
+  '</div>';
   document.getElementById('rightColumn').appendChild(cheatsTab);
+  console.log('Received settings: ', settings);
+  for (let key in settings) {
+    switch (key) {
+      case 'threshold': document.getElementById('autoThreshold').value = settings[key]; break;
+      case 'mainSwitch': document.getElementById('automateKittens').checked = settings[key]; break;
+      case 'autoCraft': document.getElementById('automateCraft').checked = settings[key]; break;
+      case 'autoHunt': document.getElementById('automateHunt').checked = settings[key]; break;
+      case 'autoPraise': document.getElementById('automatePraise').checked = settings[key]; break;
+      case 'autoObserve': document.getElementById('automateObserve').checked = settings[key]; break;
+      case 'autoParchment': document.getElementById('automateParchment').checked = settings[key]; break;
+      case 'autoManuscript': document.getElementById('automateManuscript').checked = settings[key]; break;
+      case 'autoCompendium': document.getElementById('automateCompendium').checked = settings[key]; break;
+      case 'autoBlueprint': document.getElementById('automateBlueprint').checke = settings[key]; break;
+    }
+  }
+  function readSettings(ev) {
+    let x = {
+      threshold: parseInt(document.getElementById('autoThreshold').value, 10),
+      mainSwitch: document.getElementById('automateKittens').checked,
+      autoCraft: document.getElementById('automateCraft').checked,
+      autoHunt: document.getElementById('automateHunt').checked,
+      autoPraise: document.getElementById('automatePraise').checked,
+      autoObserve: document.getElementById('automateObserve').checked,
+      autoParchment: document.getElementById('automateParchment').checked,
+      autoManuscript: document.getElementById('automateManuscript').checked,
+      autoCompendium: document.getElementById('automateCompendium').checked,
+      autoBlueprint: document.getElementById('automateBlueprint').checked
+    };
+    chrome.extension.sendMessage({ type: "settings", settings: x });
+  }
+  for (let name of ['autoThreshold', 'automateKittens', 'automateCraft', 'automateHunt',
+    'automatePraise', 'automateObserve', 'automateParchment', 'automateManuscript', 'automateCompendium', 'automateBlueprint'])
+    document.getElementById(name).onchange = readSettings;
 }
 
-add_cheats();
+chrome.extension.sendMessage({ type: "load" }, function (response) {
+  add_cheats(response);
+});
