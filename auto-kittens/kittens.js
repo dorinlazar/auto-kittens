@@ -46,7 +46,7 @@ function add_cheats(settings) {
       case 'autoParchment': document.getElementById('automateParchment').checked = settings[key]; break;
       case 'autoManuscript': document.getElementById('automateManuscript').checked = settings[key]; break;
       case 'autoCompendium': document.getElementById('automateCompendium').checked = settings[key]; break;
-      case 'autoBlueprint': document.getElementById('automateBlueprint').checke = settings[key]; break;
+      case 'autoBlueprint': document.getElementById('automateBlueprint').checked = settings[key]; break;
     }
   }
   function readSettings(ev) {
