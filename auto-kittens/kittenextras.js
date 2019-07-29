@@ -105,6 +105,8 @@ function ak_autoCraft() {
     ak_craft('slab', 'minerals');
     ak_craft('steel', 'coal');
     ak_craft('plate', 'iron');
+    ak_craft('alloy', 'titanium');
+    ak_craft('kerosene', 'oil');
   }
   let ws = gamePage.workshop;
   if (ws.getCraftAllCount('parchment') > 0 && ws.getCraft('parchment').unlocked && settings.autoParchment) {
