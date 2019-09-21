@@ -1,3 +1,19 @@
+const RESOURCES = [
+  ['beam', 'wood'],
+  ['wood', 'catnip'],
+  ['slab', 'minerals'],
+  ['steel', 'coal'],
+  ['plate', 'iron'],
+  ['alloy', 'titanium'],
+  ['kerosene', 'oil']
+];
+
+const BUILDINGS = ['workshop', 'barn', 'lumberMill', 'mine', 'aqueduct', 'academy', 'library', 'field', 'pasture', 'smelter', 'hut', 'logHouse', 'warehouse', 'quarry'];
+
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+function foreachresource(f) { RESOURCES.forEach(el => f(el[0], 'craft'+capitalize(el[0]), el[1])); }
+function foreachbuilding(f) { BUILDINGS.forEach(el => f(el, 'build' + capitalize(el))); }
+
 class Settings {
   constructor() {
     this.restore();
@@ -5,7 +21,6 @@ class Settings {
   restore() {
     this.threshold = parseInt($('#autoThreshold').prop('value'), 10);
     this.mainSwitch = $('#automateKittens').prop('checked');
-    this.autoCraft = $('#automateCraft').prop('checked');
     this.autoHunt = $('#automateHunt').prop('checked');
     this.autoPraise = $('#automatePraise').prop('checked');
     this.autoObserve = $('#automateObserve').prop('checked');
@@ -13,20 +28,22 @@ class Settings {
     this.autoManuscript = $('#automateManuscript').prop('checked');
     this.autoCompendium = $('#automateCompendium').prop('checked');
     this.autoBlueprint = $('#automateBlueprint').prop('checked');
+    if ($('#automateCraft').prop('checked')) {
+      foreachresource((name, elname) => {this[elname] = true});
+    } else {
+      foreachresource((name, elname) => {this[elname] = Boolean($('#'+elname).prop('checked'))});
+    }
+    foreachbuilding((bname, elname) => {this[elname] = Boolean($('#'+elname).prop('checked'))})
   }
 }
 var settings = new Settings();
 
-$('#autoThreshold').on('change', () => settings.restore());
-$('#automateKittens').on('change', () => settings.restore());
-$('#automateCraft').on('change', () => settings.restore());
-$('#automateHunt').on('change', () => settings.restore());
-$('#automatePraise').on('change', () => settings.restore());
-$('#automateObserve').on('change', () => settings.restore());
-$('#automateParchment').on('change', () => settings.restore());
-$('#automateManuscript').on('change', () => settings.restore());
-$('#automateCompendium').on('change', () => settings.restore());
-$('#automateBlueprint').on('change', () => settings.restore());
+['#autoThreshold', '#automateKittens', '#automateHunt',
+ '#automatePraise', '#automateObserve', '#automateParchment',
+ '#automateManuscript', '#automateCompendium', '#automateBlueprint'
+].forEach((x) => {$(x).on('change', () => settings.restore())});
+foreachresource((name, elname) => {$('#' + elname).on('change', () => settings.restore())});
+foreachbuilding((name, elname) => {$('#' + elname).on('change', () => settings.restore())});
 
 
 function ak_timer_function() {
@@ -98,16 +115,45 @@ function ak_craft(res, from) {
   }
 }
 
-function ak_autoCraft() {
-  if (settings.autoCraft) {
-    ak_craft('beam', 'wood');
-    ak_craft('wood', 'catnip');
-    ak_craft('slab', 'minerals');
-    ak_craft('steel', 'coal');
-    ak_craft('plate', 'iron');
-    ak_craft('alloy', 'titanium');
-    ak_craft('kerosene', 'oil');
+function ak_log_result(res, btn) {
+  if (res) {
+    console.log('Autobuilt', btn.model.metadata.name);
+    btn.update(); // NOT ENOUGH!
   }
+}
+
+function ak_try_build(name, elname) {
+  if (settings[elname]) {
+    let btns = gamePage.tabs[0].buttons;
+    if (gamePage.bld.getBuildingExt(name).meta.unlocked) {
+      for (j=2; j<btns.length; j++) {
+        let model = btns[j].model;
+        if (model.metadata.name == name) {
+          btns[j].controller.buyItem(model, {}, res => ak_log_result(res, btns[j]));
+          return;
+        } 
+      }
+    }
+  }
+}
+
+function ak_try_craft(name, elname, from) {
+  if (settings[elname]) {
+    ak_craft(name, from)
+  }
+}
+
+function ak_autoCraft() {
+  foreachbuilding(ak_try_build);
+  foreachresource(ak_try_craft);
+
+  if (settings.craftBeam) ak_craft('beam', 'wood');
+  if (settings.craftWood) ak_craft('wood', 'catnip');
+  if (settings.craftSlab) ak_craft('slab', 'minerals');
+  if (settings.craftSteel) ak_craft('steel', 'coal');
+  if (settings.craftPlate) ak_craft('plate', 'iron');
+  if (settings.craftAlloy) ak_craft('alloy', 'titanium');
+  if (settings.craftKerosene) ak_craft('kerosene', 'oil');
   let ws = gamePage.workshop;
   if (ws.getCraftAllCount('parchment') > 0 && ws.getCraft('parchment').unlocked && settings.autoParchment) {
     gamePage.craftAll('parchment');
