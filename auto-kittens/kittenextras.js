@@ -5,10 +5,12 @@ const RESOURCES = [
   ['steel', 'coal'],
   ['plate', 'iron'],
   ['alloy', 'titanium'],
-  ['kerosene', 'oil']
+  ['kerosene', 'oil'],
+  ['thorium', 'uranium'],
+  ['eludium', 'unobtainium']
 ];
 
-const BUILDINGS = ['workshop', 'barn', 'lumberMill', 'mine', 'aqueduct', 'academy', 'library', 'field', 'pasture', 'smelter', 'hut', 'logHouse', 'warehouse', 'quarry'];
+const BUILDINGS = ['hut', 'logHouse', 'aqueduct', 'field', 'pasture', 'workshop', 'lumberMill', 'mine', 'smelter', 'quarry', 'library', 'academy', 'observatory', 'barn', 'warehouse', 'amphitheatre', 'temple', 'tradepost'];
 
 function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 function foreachresource(f) { RESOURCES.forEach(el => f(el[0], 'craft'+capitalize(el[0]), el[1])); }
