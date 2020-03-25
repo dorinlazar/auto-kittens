@@ -1,7 +1,7 @@
 {
   "name": "Auto kittens",
   "description": "Kittens automation",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "manifest_version": 2,
   "browser_action": {
     "default_icon": "images/cat128.png"
@@ -30,7 +30,8 @@
   },
   "permissions": [
     "*://bloodrizer.ru/games/kittens/",
-    "*://bloodrizer.ru/games/kittens/beta/"
+    "*://bloodrizer.ru/games/kittens/beta/",
+    "*://kittensgame.com/web/"
   ],
   "short_name": "Auto.Kittens",
   "web_accessible_resources": [

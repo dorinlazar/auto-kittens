@@ -3,8 +3,8 @@ function add_cheats(settings) {
     return;
   }
 
-  const KRESOURCES = ['beam', 'wood', 'slab', 'steel', 'plate', 'alloy', 'kerosene'];
-  const KBUILDINGS = ['workshop', 'barn', 'lumberMill', 'mine', 'aqueduct', 'academy', 'library', 'field', 'pasture', 'smelter', 'hut', 'logHouse', 'warehouse', 'quarry'];
+  const KRESOURCES = ['beam', 'wood', 'slab', 'steel', 'plate', 'alloy', 'kerosene', 'thorium', 'eludium'];
+  const KBUILDINGS = ['hut', 'logHouse', 'aqueduct', 'field', 'pasture', 'workshop', 'lumberMill', 'mine', 'smelter', 'quarry', 'library', 'academy', 'observatory', 'barn', 'warehouse', 'amphitheatre', 'temple', 'tradepost'];
   
   let nbsp = document.createElement('div');
   nbsp.innerHTML = '&nbsp;|&nbsp;';
@@ -42,7 +42,7 @@ function add_cheats(settings) {
     }
     return res;
   }
-  cheatsTab.innerHTML = '<div id="autoContainer">' +
+  cheatsTab.innerHTML = '<div id="autoContainer" style="overflow-y: scroll; max-height: 600px;">' +
     '<input type="checkbox" name="automateKittens" id="automateKittens" checked/><label for="automateKittens">Automate Kittens (when disabled overrides all below)</label><br>' +
     '<input type="number" name="autoThreshold" id="autoThreshold" min="0" max="99" value="99"/><label for="autoThreshold">Threshold</label><br>' +
     '<input type="checkbox" name="automateHunt" id="automateHunt" checked/><label for="automateHunt">Automate hunts (on max catpower)</label><br>' +
