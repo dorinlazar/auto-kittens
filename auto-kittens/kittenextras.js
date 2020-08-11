@@ -176,8 +176,9 @@ function ak_autoHunt() {
     mp = gamePage.resPool.get('manpower');
     if (ak_resource_at_limit(mp)) {
       //gamePage.village.sendHunters(); // this doesn't properly decrease catpower.
-      let nHunts = ak_resource_limit_spend(mp, 100);
-      gamePage.village.huntMultiple(nHunts);
+      // let nHunts = ak_resource_limit_spend(mp, 100);
+      // gamePage.village.huntMultiple(nHunts);
+      gamePage.village.huntAll();
     }
   }
 };
