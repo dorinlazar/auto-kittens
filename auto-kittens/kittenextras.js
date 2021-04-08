@@ -10,10 +10,12 @@ const RESOURCES = [
   ['eludium', 'unobtainium']
 ];
 
+ak_buildTab = null;
+
 const BUILDINGS = ['hut', 'logHouse', 'aqueduct', 'field', 'pasture', 'workshop', 'lumberMill', 'mine', 'smelter', 'quarry', 'library', 'academy', 'observatory', 'barn', 'warehouse', 'amphitheatre', 'temple', 'tradepost'];
 
 function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-function foreachresource(f) { RESOURCES.forEach(el => f(el[0], 'craft'+capitalize(el[0]), el[1])); }
+function foreachresource(f) { RESOURCES.forEach(el => f(el[0], 'craft' + capitalize(el[0]), el[1])); }
 function foreachbuilding(f) { BUILDINGS.forEach(el => f(el, 'build' + capitalize(el))); }
 
 class Settings {
@@ -31,27 +33,35 @@ class Settings {
     this.autoCompendium = $('#automateCompendium').prop('checked');
     this.autoBlueprint = $('#automateBlueprint').prop('checked');
     if ($('#automateCraft').prop('checked')) {
-      foreachresource((name, elname) => {this[elname] = true});
+      foreachresource((name, elname) => { this[elname] = true });
     } else {
-      foreachresource((name, elname) => {this[elname] = Boolean($('#'+elname).prop('checked'))});
+      foreachresource((name, elname) => { this[elname] = Boolean($('#' + elname).prop('checked')) });
     }
-    foreachbuilding((bname, elname) => {this[elname] = Boolean($('#'+elname).prop('checked'))})
+    foreachbuilding((bname, elname) => { this[elname] = Boolean($('#' + elname).prop('checked')) })
   }
 }
 var settings = new Settings();
 
 ['#autoThreshold', '#automateKittens', '#automateHunt',
- '#automatePraise', '#automateObserve', '#automateParchment',
- '#automateManuscript', '#automateCompendium', '#automateBlueprint'
-].forEach((x) => {$(x).on('change', () => settings.restore())});
-foreachresource((name, elname) => {$('#' + elname).on('change', () => settings.restore())});
-foreachbuilding((name, elname) => {$('#' + elname).on('change', () => settings.restore())});
+  '#automatePraise', '#automateObserve', '#automateParchment',
+  '#automateManuscript', '#automateCompendium', '#automateBlueprint'
+].forEach((x) => { $(x).on('change', () => settings.restore()) });
+foreachresource((name, elname) => { $('#' + elname).on('change', () => settings.restore()) });
+foreachbuilding((name, elname) => { $('#' + elname).on('change', () => settings.restore()) });
 
 
 function ak_timer_function() {
   if ($("#game").is(':hidden')) {
     console.log('Skipping turn, not fully loaded');
     return;
+  }
+  if (ak_buildTab === null) {
+    for (var tab in game.tabs) {
+      if (game.tabs[tab].tabId === 'Bonfire') {
+        ak_buildTab = game.tabs[tab];
+        break;
+      }
+    }
   }
   if (!$('#rightTabAutoKittens').is(':hidden')) {
     if (!$('#rightTabChat').is(':hidden') || !$('#rightTabLog').is(':hidden')) {
@@ -126,14 +136,17 @@ function ak_log_result(res, btn) {
 
 function ak_try_build(name, elname) {
   if (settings[elname]) {
-    let btns = gamePage.tabs[0].buttons;
+    let btns = ak_buildTab.children;
+    if (btns.length==0) { // support for old, unsupported version.
+      btns = ak_buildTab.buttons;
+    }
     if (gamePage.bld.getBuildingExt(name).meta.unlocked) {
-      for (j=2; j<btns.length; j++) {
+      for (j = 2; j < btns.length; j++) {
         let model = btns[j].model;
         if (model.metadata.name == name) {
           btns[j].controller.buyItem(model, {}, res => ak_log_result(res, btns[j]));
           return;
-        } 
+        }
       }
     }
   }
