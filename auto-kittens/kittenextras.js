@@ -12,7 +12,17 @@ const RESOURCES = [
 
 ak_buildTab = null;
 
-const BUILDINGS = ['hut', 'logHouse', 'aqueduct', 'field', 'pasture', 'workshop', 'lumberMill', 'mine', 'smelter', 'quarry', 'library', 'academy', 'observatory', 'barn', 'warehouse', 'amphitheatre', 'temple', 'tradepost'];
+const KRESOURCES = ['wood', 'beam', 'slab', 'steel', 'plate', 'alloy', 'kerosene', 'thorium', 'eludium'];
+const KFOOD = ['field', 'pasture', 'aqueduct'];
+const KHOUSING = ['hut', 'logHouse', 'mansion'];
+const KSCIENCE = ['library', 'academy', 'observatory', 'biolab'];
+const KSTORAGE = ['barn', 'warehouse', 'harbor'];
+const KINDUSTRY = ['mine', 'quarry', 'lumberMill', 'oilWell', 'accelerator', 'smelter', 'calciner', 'factory', 'workshop'];
+const KENERGY = ['steamworks', 'magneto', 'reactor'];
+const KFAITH = ['amphitheatre', 'chapel', 'temple', 'unicornPasture', 'ziggurat'];
+const KECONOMY = ['tradepost', 'mint', 'brewery'];
+
+const BUILDINGS = KFOOD.concat(KHOUSING, KSCIENCE, KSTORAGE, KINDUSTRY, KENERGY, KFAITH, KECONOMY);
 
 function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 function foreachresource(f) { RESOURCES.forEach(el => f(el[0], 'craft' + capitalize(el[0]), el[1])); }
@@ -135,18 +145,19 @@ function ak_log_result(res, btn) {
 }
 
 function ak_try_build(name, elname) {
-  if (settings[elname]) {
+  if (settings[elname] && gamePage.bld.getBuildingExt(name).meta.unlocked) {
     let btns = ak_buildTab.children;
-    if (btns.length==0) { // support for old, unsupported version.
+    if (btns.length == 0) { // support for old, unsupported version.
       btns = ak_buildTab.buttons;
     }
-    if (gamePage.bld.getBuildingExt(name).meta.unlocked) {
-      for (j = 2; j < btns.length; j++) {
-        let model = btns[j].model;
-        if (model.metadata.name == name) {
-          btns[j].controller.buyItem(model, {}, res => ak_log_result(res, btns[j]));
-          return;
-        }
+    for (j = 2; j < btns.length; j++) {
+      let btn = btns[j];
+      if (btn.model.metadata && btn.model.metadata.name == name) {
+        btn.controller.updateEnabled(btn.model);
+        let ak__event = document.createEvent("HTMLEvents");
+        ak__event.initEvent("click", false, true);
+        btn.controller.buyItem(btn.model, ak__event, res => ak_log_result(res, btn));
+        return;
       }
     }
   }

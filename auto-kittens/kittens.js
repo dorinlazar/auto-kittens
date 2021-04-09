@@ -3,9 +3,18 @@ function add_cheats(settings) {
     return;
   }
 
-  const KRESOURCES = ['beam', 'wood', 'slab', 'steel', 'plate', 'alloy', 'kerosene', 'thorium', 'eludium'];
-  const KBUILDINGS = ['hut', 'logHouse', 'aqueduct', 'field', 'pasture', 'workshop', 'lumberMill', 'mine', 'smelter', 'quarry', 'library', 'academy', 'observatory', 'barn', 'warehouse', 'amphitheatre', 'temple', 'tradepost'];
-  
+  const KRESOURCES = ['wood', 'beam', 'slab', 'steel', 'plate', 'alloy', 'kerosene', 'thorium', 'eludium'];
+  const KFOOD = ['field', 'pasture', 'aqueduct'];
+  const KHOUSING = ['hut', 'logHouse', 'mansion'];
+  const KSCIENCE = ['library', 'academy', 'observatory', 'biolab'];
+  const KSTORAGE = ['barn', 'warehouse', 'harbor'];
+  const KINDUSTRY = ['mine', 'quarry', 'lumberMill', 'oilWell', 'accelerator', 'smelter', 'calciner', 'factory', 'workshop'];
+  const KENERGY = ['steamworks', 'magneto', 'reactor'];
+  const KFAITH = ['amphitheatre', 'chapel', 'temple', 'unicornPasture', 'ziggurat'];
+  const KECONOMY = ['tradepost', 'mint', 'brewery'];
+
+  const KBUILDINGS = KFOOD.concat(KHOUSING, KSCIENCE, KSTORAGE, KINDUSTRY, KENERGY, KFAITH, KECONOMY);
+
   let nbsp = document.createElement('div');
   nbsp.innerHTML = '&nbsp;|&nbsp;';
   let link = document.createElement('div');
@@ -25,7 +34,7 @@ function add_cheats(settings) {
   cheatsTab.setAttribute('style', 'display:none;');
   function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
   function resourceSelectors() {
-    let res = '';
+    let res = ' Resources:<br>';
     for (let r of KRESOURCES) {
       let cap = capitalize(r);
       let str = '<input type="checkbox" name="craft' + cap + '" id="craft' + cap +'" checked/><label for="craft' + cap +'">Craft ' + r + '</label><br>';
@@ -34,12 +43,17 @@ function add_cheats(settings) {
     return res;
   }
   function buildingSelectors() {
-    let res = '';
-    for (let r of KBUILDINGS) {
-      let cap = capitalize(r);
-      let str = '<input type="checkbox" name="build' + cap + '" id="build' + cap +'"/><label for="build' + cap +'">Build ' + r + '</label><br>';
-      res += str;
+    function gbs(buildingType, dataArr) {
+      let result = buildingType + ':<br>';
+      for (let r of dataArr) {
+        let cap = capitalize(r);
+        let str = '<input type="checkbox" name="build' + cap + '" id="build' + cap +'"/><label for="build' + cap +'">Build ' + r + '</label><br>';
+        result += str;
+      }
+      return result;
     }
+    let res = gbs('Food', KFOOD) + gbs('Housing', KHOUSING) + gbs('Science', KSCIENCE) + gbs('Storage', KSTORAGE) +
+              gbs('Industry', KINDUSTRY) + gbs('Energy', KENERGY) + gbs('Faith', KFAITH) + gbs('Economy', KECONOMY);
     return res;
   }
   cheatsTab.innerHTML = '<div id="autoContainer" style="overflow-y: scroll; max-height: 600px;">' +
@@ -47,7 +61,7 @@ function add_cheats(settings) {
     '<input type="number" name="autoThreshold" id="autoThreshold" min="0" max="99" value="99"/><label for="autoThreshold">Threshold</label><br>' +
     '<input type="checkbox" name="automateHunt" id="automateHunt" checked/><label for="automateHunt">Automate hunts (on max catpower)</label><br>' +
     '<input type="checkbox" name="automatePraise" id="automatePraise" checked/><label for="automatePraise">Automate praise (on max faith)</label><br>' +
-    '<input type="checkbox" name="automateObserve" id="automateObserve" checked/><label for="automateObserve">Auto observe the sky</label><br>' +
+    '<input type="checkbox" name="automateObserve" id="automateObserve" checked/><label for="automateObserve">Auto observe the sky</label><br> Science:<br>' +
     '<input type="checkbox" name="automateParchment" id="automateParchment" checked/><label for="automateParchment">Auto make parchments (when furs available)</label><br>' +
     '<input type="checkbox" name="automateManuscript" id="automateManuscript" checked/><label for="automateManuscript">Auto make manuscripts (on max culture)</label><br>' +
     '<input type="checkbox" name="automateCompendium" id="automateCompendium"/><label for="automateCompendium">Auto make compendiums (on max science)</label><br>' +
