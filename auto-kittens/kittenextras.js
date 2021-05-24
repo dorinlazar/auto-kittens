@@ -33,35 +33,35 @@ class Settings {
     this.restore();
   }
   restore() {
-    this.threshold = parseInt($('#autoThreshold').prop('value'), 10);
-    this.mainSwitch = $('#automateKittens').prop('checked');
-    this.autoHunt = $('#automateHunt').prop('checked');
-    this.autoPraise = $('#automatePraise').prop('checked');
-    this.autoObserve = $('#automateObserve').prop('checked');
-    this.autoParchment = $('#automateParchment').prop('checked');
-    this.autoManuscript = $('#automateManuscript').prop('checked');
-    this.autoCompendium = $('#automateCompendium').prop('checked');
-    this.autoBlueprint = $('#automateBlueprint').prop('checked');
-    if ($('#automateCraft').prop('checked')) {
+    this.threshold = parseInt(document.getElementById('autoThreshold').value, 10);
+    this.mainSwitch = document.getElementById('automateKittens').checked;
+    this.autoHunt = document.getElementById('automateHunt').checked;
+    this.autoPraise = document.getElementById('automatePraise').checked;
+    this.autoObserve = document.getElementById('automateObserve').checked;
+    this.autoParchment = document.getElementById('automateParchment').checked;
+    this.autoManuscript = document.getElementById('automateManuscript').checked;
+    this.autoCompendium = document.getElementById('automateCompendium').checked;
+    this.autoBlueprint = document.getElementById('automateBlueprint').checked;
+    if (document.getElementById('automateCraft').checked) {
       foreachresource((name, elname) => { this[elname] = true });
     } else {
-      foreachresource((name, elname) => { this[elname] = Boolean($('#' + elname).prop('checked')) });
+      foreachresource((name, elname) => { this[elname] = Boolean(document.getElementById('' + elname).checked) });
     }
-    foreachbuilding((bname, elname) => { this[elname] = Boolean($('#' + elname).prop('checked')) })
+    foreachbuilding((bname, elname) => { this[elname] = Boolean(document.getElementById('' + elname).checked) })
   }
 }
 var settings = new Settings();
 
-['#autoThreshold', '#automateKittens', '#automateHunt',
-  '#automatePraise', '#automateObserve', '#automateParchment',
-  '#automateManuscript', '#automateCompendium', '#automateBlueprint'
-].forEach((x) => { $(x).on('change', () => settings.restore()) });
-foreachresource((name, elname) => { $('#' + elname).on('change', () => settings.restore()) });
-foreachbuilding((name, elname) => { $('#' + elname).on('change', () => settings.restore()) });
+['autoThreshold', 'automateKittens', 'automateHunt',
+  'automatePraise', 'automateObserve', 'automateParchment',
+  'automateManuscript', 'automateCompendium', 'automateBlueprint'
+].forEach((x) => { document.getElementById(x).on('change', () => settings.restore()) });
+foreachresource((name, elname) => { document.getElementById('' + elname).on('change', () => settings.restore()) });
+foreachbuilding((name, elname) => { document.getElementById('' + elname).on('change', () => settings.restore()) });
 
 
 function ak_timer_function() {
-  if ($("#game").is(':hidden')) {
+  if (document.getElementById("game").is(':hidden')) {
     console.log('Skipping turn, not fully loaded');
     return;
   }
@@ -73,9 +73,9 @@ function ak_timer_function() {
       }
     }
   }
-  if (!$('#rightTabAutoKittens').is(':hidden')) {
-    if (!$('#rightTabChat').is(':hidden') || !$('#rightTabLog').is(':hidden')) {
-      $('#rightTabAutoKittens').hide();
+  if (!document.getElementById('rightTabAutoKittens').is(':hidden')) {
+    if (!document.getElementById('rightTabChat').is(':hidden') || !document.getElementById('rightTabLog').is(':hidden')) {
+      document.getElementById('rightTabAutoKittens').hide();
     }
   }
   if (settings.mainSwitch) {
@@ -101,7 +101,7 @@ function ak_named_resource_at_limit(res) {
 
 function ak_observeTheSky() {
   if (settings.autoObserve) {
-    $('#observeBtn').click();
+    document.getElementById('observeBtn').click();
   }
 }
 
@@ -216,12 +216,12 @@ function ak_autoPray() {
 }
 
 function ak_cheats_clicked() {
-  $('#rightTabChat').hide();
-  $('#rightTabLog').hide();
-  $('#rightTabAutoKittens').show();
-  $('#autoContainer').css("visibility", "visible");
-  $('#logLink').toggleClass('active', false);
-  $('#chatLink').toggleClass('active', false);
+  document.getElementById('rightTabChat').hide();
+  document.getElementById('rightTabLog').hide();
+  document.getElementById('rightTabAutoKittens').show();
+  document.getElementById('autoContainer').css("visibility", "visible");
+  document.getElementById('logLink').toggleClass('active', false);
+  document.getElementById('chatLink').toggleClass('active', false);
 }
 
 setInterval(ak_timer_function, 1000);
