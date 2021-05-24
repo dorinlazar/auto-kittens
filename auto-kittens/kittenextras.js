@@ -213,23 +213,23 @@ function ak_autoPray() {
   }
 }
 
-function showElement(name, visibility) {
+function ak_show_element(name, visibility) {
   let elem = document.getElementById(name);
   if (elem == null) { return; }
   if (visibility) {
     elem.style.visibility = 'visible';
     elem.style.display = 'block';
   } else {
-    elem.style.visibility = 'hidden';
+    //elem.style.visibility = 'hidden';
     elem.style.display = 'none';
   }
 }
 
 function ak_cheats_clicked() {
-  showElement('rightTabChat', false);
-  showElement('rightTabLog', false);
-  showElement('rightTabAutoKittens', true);
-  showElement('autoContainer', true);
+  ak_show_element('rightTabChat', false);
+  ak_show_element('rightTabLog', false);
+  ak_show_element('rightTabAutoKittens', true);
+  ak_show_element('autoContainer', true);
 
   document.getElementById('logLink').classList.remove('active');
   document.getElementById('chatLink').classList.remove('active');
