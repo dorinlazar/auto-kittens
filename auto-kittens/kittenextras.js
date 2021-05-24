@@ -42,11 +42,7 @@ class Settings {
     this.autoManuscript = document.getElementById('automateManuscript').checked;
     this.autoCompendium = document.getElementById('automateCompendium').checked;
     this.autoBlueprint = document.getElementById('automateBlueprint').checked;
-    if (document.getElementById('automateCraft').checked) {
-      foreachresource((name, elname) => { this[elname] = true });
-    } else {
-      foreachresource((name, elname) => { this[elname] = Boolean(document.getElementById('' + elname).checked) });
-    }
+    foreachresource((name, elname) => { this[elname] = Boolean(document.getElementById('' + elname).checked) });
     foreachbuilding((bname, elname) => { this[elname] = Boolean(document.getElementById('' + elname).checked) })
   }
 }
@@ -55,13 +51,13 @@ var settings = new Settings();
 ['autoThreshold', 'automateKittens', 'automateHunt',
   'automatePraise', 'automateObserve', 'automateParchment',
   'automateManuscript', 'automateCompendium', 'automateBlueprint'
-].forEach((x) => { document.getElementById(x).on('change', () => settings.restore()) });
-foreachresource((name, elname) => { document.getElementById('' + elname).on('change', () => settings.restore()) });
-foreachbuilding((name, elname) => { document.getElementById('' + elname).on('change', () => settings.restore()) });
+].forEach((x) => { document.getElementById(x).addEventListener('change', () => settings.restore()) });
+foreachresource((name, elname) => { document.getElementById('' + elname).addEventListener('change', () => settings.restore()) });
+foreachbuilding((name, elname) => { document.getElementById('' + elname).addEventListener('change', () => settings.restore()) });
 
 
 function ak_timer_function() {
-  if (document.getElementById("game").is(':hidden')) {
+  if (document.getElementById("game").style.visibility == 'hidden') {
     console.log('Skipping turn, not fully loaded');
     return;
   }
@@ -73,12 +69,12 @@ function ak_timer_function() {
       }
     }
   }
-  if (!document.getElementById('rightTabAutoKittens').is(':hidden')) {
-    if (!document.getElementById('rightTabChat').is(':hidden') || !document.getElementById('rightTabLog').is(':hidden')) {
-      document.getElementById('rightTabAutoKittens').hide();
+  if (document.getElementById('rightTabAutoKittens').style.visibility != 'hidden') {
+    if (document.getElementById('rightTabChat').style.visibility != 'hidden' || document.getElementById('rightTabLog').style.visibility != 'hidden') {
+      document.getElementById('rightTabAutoKittens').style.visibility = 'hidden';
     }
   }
-  if (settings.mainSwitch) {
+  if (settings.mainSwitch && typeof gamePage != 'undefined') {
     ak_observeTheSky();
     ak_autoPray();
     ak_autoCraft();
@@ -101,7 +97,9 @@ function ak_named_resource_at_limit(res) {
 
 function ak_observeTheSky() {
   if (settings.autoObserve) {
-    document.getElementById('observeBtn').click();
+    let btn = document.getElementById('observeBtn');
+    if (btn != null)
+      btn.click();
   }
 }
 
@@ -215,13 +213,27 @@ function ak_autoPray() {
   }
 }
 
+function showElement(name, visibility) {
+  let elem = document.getElementById(name);
+  if (elem == null) { return; }
+  if (visibility) {
+    elem.style.visibility = 'visible';
+    elem.style.display = 'block';
+  } else {
+    elem.style.visibility = 'hidden';
+    elem.style.display = 'none';
+  }
+}
+
 function ak_cheats_clicked() {
-  document.getElementById('rightTabChat').hide();
-  document.getElementById('rightTabLog').hide();
-  document.getElementById('rightTabAutoKittens').show();
-  document.getElementById('autoContainer').css("visibility", "visible");
-  document.getElementById('logLink').toggleClass('active', false);
-  document.getElementById('chatLink').toggleClass('active', false);
+  showElement('rightTabChat', false);
+  showElement('rightTabLog', false);
+  showElement('rightTabAutoKittens', true);
+  showElement('autoContainer', true);
+
+  document.getElementById('logLink').classList.remove('active');
+  document.getElementById('chatLink').classList.remove('active');
+  document.getElementById('chatLink').classList.remove('active');
 }
 
 setInterval(ak_timer_function, 1000);
