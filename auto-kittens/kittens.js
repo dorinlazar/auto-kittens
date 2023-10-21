@@ -37,7 +37,7 @@ function add_cheats(settings) {
     let res = ' Resources:<br>';
     for (let r of KRESOURCES) {
       let cap = capitalize(r);
-      let str = '<input type="checkbox" name="craft' + cap + '" id="craft' + cap +'" checked/><label for="craft' + cap +'">Craft ' + r + '</label><br>';
+      let str = '<input type="checkbox" name="craft' + cap + '" id="craft' + cap + '" checked/><label for="craft' + cap + '">Craft ' + r + '</label><br>';
       res += str;
     }
     return res;
@@ -47,13 +47,13 @@ function add_cheats(settings) {
       let result = buildingType + ':<br>';
       for (let r of dataArr) {
         let cap = capitalize(r);
-        let str = '<input type="checkbox" name="build' + cap + '" id="build' + cap +'"/><label for="build' + cap +'">Build ' + r + '</label><br>';
+        let str = '<input type="checkbox" name="build' + cap + '" id="build' + cap + '"/><label for="build' + cap + '">Build ' + r + '</label><br>';
         result += str;
       }
       return result;
     }
     let res = gbs('Food', KFOOD) + gbs('Housing', KHOUSING) + gbs('Science', KSCIENCE) + gbs('Storage', KSTORAGE) +
-              gbs('Industry', KINDUSTRY) + gbs('Energy', KENERGY) + gbs('Faith', KFAITH) + gbs('Economy', KECONOMY);
+      gbs('Industry', KINDUSTRY) + gbs('Energy', KENERGY) + gbs('Faith', KFAITH) + gbs('Economy', KECONOMY);
     return res;
   }
   cheatsTab.innerHTML = '<div id="autoContainer" style="overflow-y: scroll; max-height: 600px;">' +
@@ -68,10 +68,11 @@ function add_cheats(settings) {
     '<input type="checkbox" name="automateBlueprint" id="automateBlueprint"/><label for="automateBlueprint">Auto make blueprints (on max science)</label><br>' +
     resourceSelectors() +
     buildingSelectors() +
-  '</div>';
+    '</div>';
   document.getElementById('rightColumn').appendChild(cheatsTab);
   console.log('Received settings: ', settings);
   for (let key in settings) {
+    console.log('evaluating key: ', key, ' ', settings[key]);
     switch (key) {
       case 'threshold': document.getElementById('autoThreshold').value = settings[key]; break;
       case 'mainSwitch': document.getElementById('automateKittens').checked = settings[key]; break;
@@ -109,10 +110,11 @@ function add_cheats(settings) {
       let name = 'build' + capitalize(r);
       x[name] = Boolean(document.getElementById(name).checked);
     }
-    chrome.extension.sendMessage({ type: "settings", settings: x });
+    window.localStorage.setItem('settings', JSON.stringify(x));
+    console.log('Storing settings: ', JSON.stringify(x));
   }
   for (let name of ['autoThreshold', 'automateKittens', 'automateHunt', 'automatePraise', 'automateObserve',
-                    'automateParchment', 'automateManuscript', 'automateCompendium', 'automateBlueprint']) {
+    'automateParchment', 'automateManuscript', 'automateCompendium', 'automateBlueprint']) {
     document.getElementById(name).onchange = readSettings;
   }
   for (let r of KRESOURCES) {
@@ -125,6 +127,7 @@ function add_cheats(settings) {
   }
 }
 
-chrome.extension.sendMessage({ type: "load" }, function (response) {
-  add_cheats(response);
-});
+result = window.localStorage.getItem('settings');
+parsed = {};
+if (result) { parsed = JSON.parse(result); }
+add_cheats(parsed);

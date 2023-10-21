@@ -1,15 +1,10 @@
 {
   "name": "Auto kittens",
   "description": "Kittens automation",
-  "version": "0.5.3",
-  "manifest_version": 2,
-  "browser_action": {
+  "version": "0.6.0",
+  "manifest_version": 3,
+  "action": {
     "default_icon": "images/cat128.png"
-  },
-  "background": {
-    "scripts": [
-      "background.js"
-    ]
   },
   "content_scripts": [
     {
@@ -29,13 +24,20 @@
     "48": "images/cat48.png",
     "128": "images/cat128.png"
   },
-  "permissions": [
+  "host_permissions": [
     "*://bloodrizer.ru/games/kittens/",
     "*://bloodrizer.ru/games/kittens/beta/",
     "*://kittensgame.com/web/"
   ],
   "short_name": "Auto.Kittens",
   "web_accessible_resources": [
-    "/kittenextras.js"
+    {
+      "resources": [
+        "/kittenextras.js"
+      ],
+      "matches": [
+        "*://*/*"
+      ]
+    }
   ]
 }
