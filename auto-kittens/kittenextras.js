@@ -69,8 +69,8 @@ function ak_timer_function() {
       }
     }
   }
-  if (document.getElementById('rightTabAutoKittens').style.visibility != 'hidden') {
-    if (document.getElementById('rightTabChat').style.visibility != 'hidden' || document.getElementById('rightTabLog').style.visibility != 'hidden') {
+  if (document.getElementById('rightTabAutoKittens')?.style.visibility != 'hidden') {
+    if (document.getElementById('rightTabQueue')?.style.visibility != 'hidden' || document.getElementById('rightTabLog')?.style.visibility != 'hidden') {
       document.getElementById('rightTabAutoKittens').style.visibility = 'hidden';
     }
   }
@@ -226,14 +226,14 @@ function ak_show_element(name, visibility) {
 }
 
 function ak_cheats_clicked() {
-  ak_show_element('rightTabChat', false);
+  ak_show_element('rightTabQueue', false);
   ak_show_element('rightTabLog', false);
   ak_show_element('rightTabAutoKittens', true);
   ak_show_element('autoContainer', true);
 
   document.getElementById('logLink').classList.remove('active');
-  document.getElementById('chatLink').classList.remove('active');
-  document.getElementById('chatLink').classList.remove('active');
+  document.getElementById('chatLink')?.classList.remove('active');
+  document.getElementById('chatLink')?.classList.remove('active');
 }
 
 setInterval(ak_timer_function, 1000);
