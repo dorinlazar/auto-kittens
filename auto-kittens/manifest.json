@@ -39,5 +39,10 @@
         "*://*/*"
       ]
     }
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{c618b222-659c-4fa2-8649-af89383d4876}"
+    }
+  }
 }
