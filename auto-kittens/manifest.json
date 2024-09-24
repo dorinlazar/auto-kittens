@@ -1,7 +1,7 @@
 {
   "name": "Auto kittens",
   "description": "Kittens automation",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "manifest_version": 3,
   "action": {
     "default_icon": "images/cat128.png"
